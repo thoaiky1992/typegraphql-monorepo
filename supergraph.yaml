@@ -1,0 +1,10 @@
+federation_version: =2.3.2
+subgraphs:
+  user:
+    routing_url: "{{APOLO_SERVICE_USER_URL}}"
+    schema:
+      file: ./graphql/user.graphql
+  product:
+    routing_url: "{{APOLO_SERVICE_PRODUCT_URL}}"
+    schema:
+      file: ./graphql/product.graphql
