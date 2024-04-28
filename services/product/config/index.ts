@@ -1,9 +1,7 @@
-import { GraphQLDataSourceProcessOptions } from '@apollo/gateway';
-import FileUploadDataSource from '@profusion/apollo-federation-upload/build/FileUploadDataSource';
 import { Request, Response } from 'express';
 import { AuthChecker, buildSchema } from 'type-graphql';
-import { UserResolver } from '@apolo-services/user/resolvers/user.resolver';
 import Container from 'typedi';
+import { ProductResolver } from '@apolo-services/product/resolvers/product.resolver';
 
 export const formaterApoloServer = (formattedError: any, error: any) => {
   switch (formattedError.extensions!.code) {
@@ -37,21 +35,8 @@ export const customAuthChecker: AuthChecker<ContextType> = ({ root, args, contex
   return false; // or 'false' if access is denied
 };
 
-export const ApoloGatewayBuildService = ({ name, url }: any) => {
-  return new FileUploadDataSource({
-    url,
-    useChunkedTransfer: true,
-    willSendRequest({ request, context }: GraphQLDataSourceProcessOptions<any>) {
-      if (request && request.http) {
-        console.log(context.req.body.variables.files);
-        request.http!.headers.set('authorization', context.req.headers.authorization || '');
-      }
-    }
-  });
-};
-
 export const buildSchemaInstance = buildSchema({
-  resolvers: [UserResolver],
+  resolvers: [ProductResolver],
   container: Container,
   authChecker: customAuthChecker,
   validate: true

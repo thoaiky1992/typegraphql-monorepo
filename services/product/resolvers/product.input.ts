@@ -1,14 +1,18 @@
-import { Field, InputType } from 'type-graphql'
+import { MinLength } from 'class-validator';
+import { Field, ID, InputType } from 'type-graphql';
 
 @InputType()
 export class ProductInput {
+  @Field(() => ID)
+  id!: string;
+
+  @MinLength(10)
   @Field()
-  id!: string
+  productName!: string;
 
   @Field()
-  productName!: string
+  price!: number;
 
   @Field()
-  price!: number
-
+  quantity!: number;
 }

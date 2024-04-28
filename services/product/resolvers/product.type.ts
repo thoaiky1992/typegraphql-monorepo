@@ -1,13 +1,16 @@
-import { Field, ID, ObjectType } from 'type-graphql'
+import { Field, ID, ObjectType } from 'type-graphql';
 
 @ObjectType()
 export class Product {
   @Field(() => ID)
-  id!: Number
+  id!: number;
 
   @Field()
-  productName!: string
+  productName!: string;
 
   @Field()
-  price!: number
+  price!: number;
+
+  @Field()
+  quantity!: number;
 }

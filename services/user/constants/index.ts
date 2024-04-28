@@ -1,6 +1,6 @@
-export const APOLO_SERVICE_USER_PORT = Number(process.env.APOLO_SERVICE_USER_PORT || 4000)
-export const APOLO_SERVICE_USER_URL = String(process.env.APOLO_SERVICE_USER_URL || '')
-export const GRAPHQL_PATH = '/graphql'
+export const APOLO_SERVICE_USER_PORT = Number(process.env.APOLO_SERVICE_USER_PORT || 4000);
+export const APOLO_SERVICE_USER_URL = String(process.env.APOLO_SERVICE_USER_URL || '');
+export const GRAPHQL_PATH = '/graphql';
 export const SAMPLE_USER_DATA = [
   {
     id: 1,
@@ -17,4 +17,4 @@ export const SAMPLE_USER_DATA = [
     userName: 'Xuan',
     password: '123456'
   }
-]
+];

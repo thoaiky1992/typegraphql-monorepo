@@ -1,43 +1,29 @@
-import 'reflect-metadata'
+import 'reflect-metadata';
 import 'dotenv/config';
-import { ApolloServer } from '@apollo/server'
-import { buildSchema } from 'type-graphql'
-import { Container } from 'typedi'
-import { customAuthChecker } from '@apolo-services/user/config'
-import express from 'express'
-import bodyParser from 'body-parser'
-import { expressMiddleware } from '@apollo/server/express4'
-import cors from 'cors'
-import { graphqlUploadExpress } from 'graphql-upload-ts'
-import { GRAPHQL_PATH } from '@apolo-services/user/constants'
-import { formaterApoloServer } from './utils/config'
-import { APOLO_SERVICE_PRODUCT_PORT, APOLO_SERVICE_PRODUCT_URL } from './constants'
-import { ProductResolver } from './resolvers/product.resolver'
+import { ApolloServer } from '@apollo/server';
+import { buildSchemaInstance, formaterApoloServer } from '@apolo-services/product/config';
+import express, { Application } from 'express';
+import { EnableApolloServer } from '@library/decorators';
+import { GRAPHQL_PATH } from '@apolo-services/product/constants';
+import { APOLO_SERVICE_PRODUCT_PORT } from '@apolo-services/product/constants';
 
-async function bootstrap() {
-  // ... Build GraphQL schema
-  const app = express()
-  const schema = await buildSchema({
-    resolvers: [ProductResolver],
-    container: Container,
-    authChecker: customAuthChecker,
-    validate: true
+abstract class IApp {
+  server: ApolloServer | undefined;
+  async start(): Promise<void> {}
+}
+async function boostrap() {
+  const application: Application = express();
+  const schema = await buildSchemaInstance;
+  @EnableApolloServer({
+    options: { schema, formatError: formaterApoloServer },
+    app: application,
+    port: Number(APOLO_SERVICE_PRODUCT_PORT || 4001),
+    path: GRAPHQL_PATH
   })
-  const server = new ApolloServer({ schema, formatError: formaterApoloServer })
-  await server.start()
-  app.use(graphqlUploadExpress())
-  app.use(
-    GRAPHQL_PATH,
-    cors(),
-    bodyParser.json(),
-    expressMiddleware(server, {
-      context: async ({ req, res }) => ({ req, res })
-    })
-  )
+  class App extends IApp {}
 
-  // Start server
-  await new Promise<void>((resolve) => app.listen({ port: Number(APOLO_SERVICE_PRODUCT_PORT) }, resolve))
-  console.log(`GraphQL server ready at ${APOLO_SERVICE_PRODUCT_URL}`);
+  const app = new App();
+  app.start();
 }
 
-bootstrap()
+boostrap();

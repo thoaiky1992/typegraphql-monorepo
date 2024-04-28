@@ -1,38 +1,29 @@
 import 'reflect-metadata';
 import 'dotenv/config';
 import { ApolloServer } from '@apollo/server';
-import { buildSchema } from 'type-graphql';
-import { Container } from 'typedi';
-import { customAuthChecker } from '@apolo-services/user/config';
-import express from 'express';
-import bodyParser from 'body-parser';
-import { expressMiddleware } from '@apollo/server/express4';
-import cors from 'cors';
-import { graphqlUploadExpress } from 'graphql-upload-ts';
-import { UserResolver } from './resolvers/user.resolver';
-import { APOLO_SERVICE_USER_PORT, APOLO_SERVICE_USER_URL, GRAPHQL_PATH } from '@apolo-services/user/constants';
-import { formaterApoloServer } from './config';
+import { buildSchemaInstance, formaterApoloServer } from '@apolo-services/user/config';
+import express, { Application } from 'express';
+import { EnableApolloServer } from '@library/decorators';
+import { GRAPHQL_PATH } from '@apolo-services/product/constants';
+import { APOLO_SERVICE_USER_PORT } from '@apolo-services/user/constants';
 
-async function bootstrap() {
-  const app = express();
-  const schema = await buildSchema({
-    resolvers: [UserResolver],
-    container: Container,
-    authChecker: customAuthChecker,
-    validate: true
-  });
-  const server = new ApolloServer({ schema, formatError: formaterApoloServer });
-  await server.start();
-  app.use(graphqlUploadExpress());
-  app.use(
-    GRAPHQL_PATH,
-    cors(),
-    bodyParser.json(),
-    expressMiddleware(server, { context: async ({ req, res }) => ({ req, res }) })
-  );
-  // Start server
-  await new Promise<void>((resolve) => app.listen({ port: Number(APOLO_SERVICE_USER_PORT) }, resolve));
-  console.log(`GraphQL server ready at ${APOLO_SERVICE_USER_URL}`);
+abstract class IApp {
+  server: ApolloServer | undefined;
+  async start(): Promise<void> {}
+}
+async function boostrap() {
+  const application: Application = express();
+  const schema = await buildSchemaInstance;
+  @EnableApolloServer({
+    options: { schema, formatError: formaterApoloServer},
+    app: application,
+    port: Number(APOLO_SERVICE_USER_PORT || 4000),
+    path: GRAPHQL_PATH
+  })
+  class App extends IApp {}
+
+  const app = new App();
+  app.start();
 }
 
-bootstrap();
+boostrap();
