@@ -5,6 +5,7 @@ import { join } from 'path';
 import Mustcache from 'mustache';
 import FileUploadDataSource from '@profusion/apollo-federation-upload';
 import { HeaderMap } from '@apollo/server';
+import { GraphQLError } from 'graphql';
 
 export const ApoloGatewaySupergraphSdl = async ({ update, healthCheck }: any) => {
   // create a file watcher
@@ -47,9 +48,11 @@ export const ApoloGatewayBuildService = ({ name, url }: any) => {
     url,
     useChunkedTransfer: true,
     willSendRequest({ request, context }) {
+      // throw new GraphQLError('Unauthenticated', { extensions: { code: 'UNAUTHENTICATED' } });
       if (!!request.http) {
         request.http.headers.set('authorization', context.req.headers['authorization'] || '');
       } else {
+
         const headers = new HeaderMap();
         for (let header in context.req.headers) {
           if (['authorization', 'apollo-require-preflight'].includes(header)) {
