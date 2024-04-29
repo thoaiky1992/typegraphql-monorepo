@@ -19,6 +19,6 @@
   "ts-node": {
     "require": ["tsconfig-paths/register"]
   },
-  "files": ["services/index.d.ts"], // Các file dùng để defined global type cho dự án
-  "include": ["services/**/*"] // Đường dẫn include cho các file cần build
+  "files": ["library/services/index.d.ts"], // Các file dùng để defined global type cho dự án
+  "include": ["services/**/*", "library/services/index.d.ts", "library/**/*"] // Đường dẫn include cho các file cần build
 }
