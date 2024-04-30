@@ -1,60 +1,42 @@
 import { Service } from 'typedi';
-import { Product, UserRelation } from '@apolo-services/product/resolvers/product.type';
+import { Product } from '@apolo-services/product/resolvers/product.type';
 import { Authorized, Ctx, FieldResolver, Query, Resolver, Root } from 'type-graphql';
 import { UserService } from '@library/services/user.service';
-import { gql } from 'graphql-request';
+import { User } from '@apolo-services/user/resolvers/user.type';
+import { Document_PRODUCT_getAllUser, Document_USER_getUserById } from '@document/index';
 
 @Service()
 @Resolver(() => Product)
 export class ProductResolver {
   constructor() {}
 
-  @FieldResolver(() => UserRelation, { nullable: true })
-  async userRelation(@Root() product: Product, @Ctx() context: any) {
-    // console.log(context.req.headers);
-    // const doccument = gql`
-    //   query ($userGetUserByIdId: Float!) {
-    //     USER_getUserById(id: $userGetUserByIdId) {
-    //       id
-    //       email
-    //       password
-    //       userName
-    //       __typename
-    //       profile {
-    //         id
-    //       }
-    //     }
-    //   }
-    // `;
-    // const data: any = await UserService.query(
-    //   doccument,
-    //   { userGetUserByIdId: product.userId },
-    //   { ...context.req.headers }
-    // );
-    // return data?.USER_getUserById;
+  @FieldResolver(() => User, { nullable: true })
+  async user(@Root() product: Product, @Ctx() context: any) {
+    // Case 1 : get user via the user service
+    const data: any = await UserService.query(
+      Document_USER_getUserById,
+      { userGetUserByIdId: product.userId },
+      { ...context.req.headers }
+    );
+    return data?.USER_getUserById;
 
-    return product?.userRelation
+    // Case 2 : OR return with relation ORM
+    // return product?.user;
   }
 
   @Authorized()
   @Query(() => [Product])
   async PRODUCT_getAllProduct() {
     const product: Array<Product> = [
-      {
-        id: 1,
-        productName: 'MacBook M1',
-        price: 41000000,
-        quantity: 1,
-        userId: 1,
-        userRelation: {
-          id: 1,
-          email: 'thoaiky1992@gmail.com',
-          password: '123456',
-          userName: 'thoaiky1992'
-        }
-      },
+      { id: 1, productName: 'MacBook M1', price: 41000000, quantity: 1, userId: 1 },
       { id: 2, productName: 'Dell', price: 20000000, quantity: 2, userId: 2 }
     ];
     return product;
+  }
+
+  @Query(() => [User])
+  async PRODUCT_getAllUser(@Ctx() context: any) {
+    const data: any = await UserService.query(Document_PRODUCT_getAllUser, {}, { ...context.req.headers });
+    return data?.USER_getAllUser || [];
   }
 }

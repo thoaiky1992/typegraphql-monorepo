@@ -12,7 +12,7 @@ import { SAMPLE_USER_DATA } from '@apolo-services/user/constants';
 export class UserResolver {
   constructor() { }
 
-  @FieldResolver()
+  @FieldResolver({ nullable: true })
   profile(@Root() user: User) {
     return user?.profile;
   }
