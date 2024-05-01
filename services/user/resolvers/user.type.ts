@@ -1,6 +1,7 @@
-import { Field, ID, ObjectType } from 'type-graphql';
+import { Directive, Field, ID, ObjectType } from 'type-graphql';
 
 @ObjectType()
+@Directive('@key(fields: "id")')
 export class User {
   @Field(() => ID, { nullable: true })
   id?: number;
@@ -18,6 +19,7 @@ export class User {
   profile?: Partial<Profile> | null;
 }
 
+@Directive('@key(fields: "id")')
 @ObjectType()
 export class Profile {
   @Field(() => ID, { nullable: true })

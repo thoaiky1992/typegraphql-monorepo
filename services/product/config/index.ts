@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
-import { AuthChecker, buildSchema } from 'type-graphql';
+import { AuthChecker, buildSchema, buildTypeDefsAndResolversSync } from 'type-graphql';
 import Container from 'typedi';
 import { ProductResolver } from '@apolo-services/product/resolvers/product.resolver';
+import { buildFederatedSchema } from '@library/helpers';
+import { Product, User } from '@apolo-services/product/resolvers/product.type';
 
 export const formaterApoloServer = (formattedError: any, error: any) => {
   switch (formattedError.extensions!.code) {
@@ -35,9 +37,17 @@ export const customAuthChecker: AuthChecker<ContextType> = ({ root, args, contex
   return false; // or 'false' if access is denied
 };
 
-export const buildSchemaInstance = buildSchema({
+export const buildTypeDefsAndResolvers = buildTypeDefsAndResolversSync({
   resolvers: [ProductResolver],
   container: Container,
   authChecker: customAuthChecker,
+  validate: true
+});
+
+export const buildFederatedApoloServiceSchema = buildFederatedSchema({
+  resolvers: [ProductResolver],
+  orphanedTypes: [Product, User],
+  authChecker: customAuthChecker,
+  container: Container,
   validate: true
 });

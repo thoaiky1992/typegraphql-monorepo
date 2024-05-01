@@ -2,7 +2,7 @@ import { Service } from 'typedi';
 import { Product } from '@apolo-services/product/resolvers/product.type';
 import { Authorized, Ctx, FieldResolver, Query, Resolver, Root } from 'type-graphql';
 import { UserService } from '@library/services/user.service';
-import { User } from '@apolo-services/user/resolvers/user.type';
+import { User } from '@apolo-services/product/resolvers/product.type';
 import { Document_PRODUCT_getAllUser, Document_USER_getUserById } from '@document/index';
 
 @Service()
@@ -13,12 +13,12 @@ export class ProductResolver {
   @FieldResolver(() => User, { nullable: true })
   async user(@Root() product: Product, @Ctx() context: any) {
     // Case 1 : get user via the user service
-    const data: any = await UserService.query(
+    const data = await UserService.query<{ USER_getUserById: User }>(
       Document_USER_getUserById,
       { userGetUserByIdId: product.userId },
       { ...context.req.headers }
     );
-    return data?.USER_getUserById;
+    return data.USER_getUserById;
 
     // Case 2 : OR return with relation ORM
     // return product?.user;

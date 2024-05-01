@@ -1,7 +1,14 @@
-import { User } from '@apolo-services/user/resolvers/user.type';
-import { Field, ID, ObjectType } from 'type-graphql';
+import { Directive, Field, ID, ObjectType } from 'type-graphql';
 
 @ObjectType()
+@Directive('@key(fields: "id")')
+export class User {
+  @Field(() => ID, { nullable: true })
+  id!: number;
+}
+
+@ObjectType()
+@Directive('@key(fields: "id")')
 export class Product {
   @Field(() => ID)
   id!: number;
@@ -18,10 +25,6 @@ export class Product {
   @Field()
   userId!: number;
 
-  @Field(() => User, { nullable: true })
+  @Field(() => User)
   user?: Partial<User> | null;
 }
-
-
-
-

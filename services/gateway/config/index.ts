@@ -49,12 +49,11 @@ export const ApoloGatewayBuildService = ({ name, url }: any) => {
     useChunkedTransfer: true,
     willSendRequest({ request, context }) {
       // throw new GraphQLError('Unauthenticated', { extensions: { code: 'UNAUTHENTICATED' } });
-      if (!!request.http) {
+      if (request.http) {
         request.http.headers.set('authorization', context.req.headers['authorization'] || '');
       } else {
-
         const headers = new HeaderMap();
-        for (let header in context.req.headers) {
+        for (const header in context.req.headers) {
           if (['authorization', 'apollo-require-preflight'].includes(header)) {
             headers.set(header, context.req.headers[header]);
           }

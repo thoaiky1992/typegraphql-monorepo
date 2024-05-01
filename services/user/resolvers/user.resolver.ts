@@ -10,7 +10,7 @@ import { SAMPLE_USER_DATA } from '@apolo-services/user/constants';
 @Service()
 @Resolver(() => User)
 export class UserResolver {
-  constructor() { }
+  constructor() {}
 
   @FieldResolver({ nullable: true })
   profile(@Root() user: User) {
@@ -28,7 +28,7 @@ export class UserResolver {
   @Authorized()
   @Query(() => User, { nullable: true })
   async USER_getUserById(@Arg('id') id: number): Promise<User | null> {
-    const user = SAMPLE_USER_DATA.find(u => u.id === id)!;
+    const user = SAMPLE_USER_DATA.find((u) => u.id === id)!;
     return user;
   }
 

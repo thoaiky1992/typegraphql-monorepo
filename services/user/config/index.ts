@@ -1,9 +1,12 @@
 import { GraphQLDataSourceProcessOptions } from '@apollo/gateway';
 import FileUploadDataSource from '@profusion/apollo-federation-upload/build/FileUploadDataSource';
 import { Request, Response } from 'express';
-import { AuthChecker, buildSchema } from 'type-graphql';
+import { AuthChecker, buildTypeDefsAndResolversSync } from 'type-graphql';
 import { UserResolver } from '@apolo-services/user/resolvers/user.resolver';
 import Container from 'typedi';
+import { buildFederatedSchema } from '@library/helpers';
+import { User, Profile } from '@apolo-services/user/resolvers/user.type';
+import { resolveUserReference } from '@apolo-services/user/resolvers/user.reference';
 
 export const formaterApoloServer = (formattedError: any, error: any) => {
   switch (formattedError.extensions!.code) {
@@ -50,9 +53,17 @@ export const ApoloGatewayBuildService = ({ name, url }: any) => {
   });
 };
 
-export const buildSchemaInstance = buildSchema({
+export const buildApoloServiceTypeDefsAndResolvers = buildTypeDefsAndResolversSync({
   resolvers: [UserResolver],
   container: Container,
   authChecker: customAuthChecker,
+  validate: true
+});
+
+export const buildFederatedApoloServiceSchema = buildFederatedSchema({
+  resolvers: [UserResolver],
+  orphanedTypes: [User, Profile],
+  authChecker: customAuthChecker,
+  container: Container,
   validate: true
 });
