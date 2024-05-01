@@ -2,8 +2,10 @@ import { Directive, Field, ID, ObjectType } from 'type-graphql';
 
 @ObjectType()
 @Directive('@key(fields: "id")')
+@Directive('@extends')
 export class User {
   @Field(() => ID, { nullable: true })
+  @Directive('@external')
   id!: number;
 }
 
@@ -25,6 +27,6 @@ export class Product {
   @Field()
   userId!: number;
 
-  @Field(() => User)
-  user?: Partial<User> | null;
+  @Field(() => User, { nullable: true })
+  user?: User;
 }

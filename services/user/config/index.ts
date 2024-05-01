@@ -60,10 +60,15 @@ export const buildApoloServiceTypeDefsAndResolvers = buildTypeDefsAndResolversSy
   validate: true
 });
 
-export const buildFederatedApoloServiceSchema = buildFederatedSchema({
-  resolvers: [UserResolver],
-  orphanedTypes: [User, Profile],
-  authChecker: customAuthChecker,
-  container: Container,
-  validate: true
-});
+export const buildFederatedApoloServiceSchema = buildFederatedSchema(
+  {
+    resolvers: [UserResolver],
+    orphanedTypes: [User, Profile],
+    authChecker: customAuthChecker,
+    container: Container,
+    validate: true
+  },
+  {
+    User: { __resolveReference: resolveUserReference }
+  }
+);

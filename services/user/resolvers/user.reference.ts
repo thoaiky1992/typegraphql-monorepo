@@ -1,6 +1,12 @@
 import { type User } from '@apolo-services/user/resolvers/user.type';
+import { Document_USER_getUserById } from '@document/index';
+import { UserService } from '@library/services/user.service';
 
-export function resolveUserReference(reference: Pick<User, 'id'>, { dataSources }: any): User | null {
-  console.log(dataSources);
-  return null;
+export async function resolveUserReference(reference: any, context: any): Promise<User> {
+  const res = await UserService.query<{ USER_getUserById: User }>(
+    Document_USER_getUserById,
+    { userGetUserByIdId: Number(reference.id) },
+    { ...context.req.headers }
+  );
+  return res.USER_getUserById;
 }

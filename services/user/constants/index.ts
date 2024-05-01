@@ -8,13 +8,18 @@ export const SAMPLE_USER_DATA = [
     userName: 'thoaiky1992',
     password: '123456',
     profile: {
-      id: 1
+      id: 1,
+      address: 'TP.HCM'
     }
   },
   {
     id: 2,
     email: 'Xuan@gmail.com',
     userName: 'Xuan',
-    password: '123456'
+    password: '123456',
+    profile: {
+      id: 2,
+      address: 'HN'
+    }
   }
 ];

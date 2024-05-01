@@ -10,6 +10,7 @@ export const Document_USER_getUserById = gql`
       __typename
       profile {
         id
+        address
       }
     }
   }
