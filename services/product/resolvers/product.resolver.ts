@@ -12,16 +12,7 @@ export class ProductResolver {
 
   @FieldResolver(() => User, { nullable: true })
   async user(@Root() product: Product, @Ctx() context: any) {
-    // Case 1 : get user via the user service
-    const data = await UserService.query<{ USER_getUserById: User }>(
-      Document_USER_getUserById,
-      { userGetUserByIdId: product.userId },
-      { ...context.req.headers }
-    );
-    return data.USER_getUserById;
-
-    // Case 2 : OR return with relation ORM
-    // return product?.user;
+    return { __type: 'User', id: product.userId }
   }
 
   @Authorized()
