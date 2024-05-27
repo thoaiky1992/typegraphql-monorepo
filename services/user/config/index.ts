@@ -4,9 +4,10 @@ import { Request, Response } from 'express';
 import { AuthChecker, buildTypeDefsAndResolversSync } from 'type-graphql';
 import { UserResolver } from '@apolo-services/user/resolvers/user.resolver';
 import Container from 'typedi';
-import { buildFederatedSchema } from '@library/helpers';
+import { buildFederatedSchema } from '@shared/helpers';
 import { User, Profile } from '@apolo-services/user/resolvers/user.type';
 import { resolveUserReference } from '@apolo-services/user/resolvers/user.reference';
+import { contextBuilderType } from '@shared/types';
 
 export const formaterApoloServer = (formattedError: any, error: any) => {
   switch (formattedError.extensions!.code) {
@@ -35,7 +36,7 @@ export const customAuthChecker: AuthChecker<ContextType> = ({ root, args, contex
   // Read user from context
   // and check the user's permission against the `roles` argument
   // that comes from the '@Authorized' decorator, eg. ["ADMIN", "MODERATOR"]
-  if (context.req.headers.authorization?.split(' ')[1] === 'abc') return true;
+  if (context?.req?.headers?.authorization?.split(' ')[1] === 'abc') return true;
 
   return false; // or 'false' if access is denied
 };
@@ -72,3 +73,5 @@ export const buildFederatedApoloServiceSchema = buildFederatedSchema(
     User: { __resolveReference: resolveUserReference }
   }
 );
+
+export const contextBuilder = ({ req, res }: contextBuilderType) => ({ req, res });

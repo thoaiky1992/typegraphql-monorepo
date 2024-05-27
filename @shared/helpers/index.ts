@@ -30,3 +30,22 @@ export async function buildFederatedSchema(
 
   return federatedSchema;
 }
+
+export const formaterApoloServer = (formattedError: any, error: any) => {
+  switch (formattedError.extensions!.code) {
+    case 'BAD_USER_INPUT':
+      const validationErrors: any = [];
+      const validationErrorsTemp = (formattedError.extensions as any).validationErrors;
+      validationErrorsTemp?.forEach((err: any) => {
+        const { constraints, value, property } = err;
+        validationErrors.push({ constraints, value, property });
+      });
+      return {
+        message: formattedError.message,
+        extensions: { code: formattedError.extensions!.code, validationErrors }
+      };
+
+    default:
+      return { message: formattedError.message };
+  }
+};

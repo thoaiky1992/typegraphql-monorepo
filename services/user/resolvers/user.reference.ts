@@ -1,6 +1,6 @@
 import { type User } from '@apolo-services/user/resolvers/user.type';
 import { Document_USER_getUserById } from '@document/index';
-import { UserService } from '@library/services/user.service';
+import { UserService } from '@shared/services/user.service';
 
 export async function resolveUserReference(reference: any, context: any): Promise<User> {
   const res = await UserService.query<{ USER_getUserById: User }>(

@@ -1,7 +1,7 @@
 import { Service } from 'typedi';
 import { Product } from '@apolo-services/product/resolvers/product.type';
 import { Authorized, Ctx, FieldResolver, Query, Resolver, Root } from 'type-graphql';
-import { UserService } from '@library/services/user.service';
+import { UserService } from '@shared/services/user.service';
 import { User } from '@apolo-services/product/resolvers/product.type';
 import { Document_PRODUCT_getAllUser, Document_USER_getUserById } from '@document/index';
 
@@ -12,7 +12,7 @@ export class ProductResolver {
 
   @FieldResolver(() => User, { nullable: true })
   async user(@Root() product: Product, @Ctx() context: any) {
-    return { __type: 'User', id: product.userId }
+    return { __type: 'User', id: product.userId };
   }
 
   @Authorized()

@@ -2,8 +2,9 @@ import { Request, Response } from 'express';
 import { AuthChecker, buildSchema, buildTypeDefsAndResolversSync } from 'type-graphql';
 import Container from 'typedi';
 import { ProductResolver } from '@apolo-services/product/resolvers/product.resolver';
-import { buildFederatedSchema } from '@library/helpers';
+import { buildFederatedSchema } from '@shared/helpers';
 import { Product, User } from '@apolo-services/product/resolvers/product.type';
+import { contextBuilderType } from '@shared/types';
 
 export const formaterApoloServer = (formattedError: any, error: any) => {
   switch (formattedError.extensions!.code) {
@@ -51,3 +52,5 @@ export const buildFederatedApoloServiceSchema = buildFederatedSchema({
   container: Container,
   validate: true
 });
+
+export const contextBuilder = ({ req, res }: contextBuilderType) => ({ req, res });

@@ -6,6 +6,7 @@ import Mustcache from 'mustache';
 import FileUploadDataSource from '@profusion/apollo-federation-upload';
 import { HeaderMap } from '@apollo/server';
 import { GraphQLError } from 'graphql';
+import { contextBuilderType } from '@shared/types';
 
 export const ApoloGatewaySupergraphSdl = async ({ update, healthCheck }: any) => {
   // create a file watcher
@@ -63,3 +64,5 @@ export const ApoloGatewayBuildService = ({ name, url }: any) => {
     }
   });
 };
+
+export const contextBuilder = ({ req, res }: contextBuilderType) => ({ req, res });
