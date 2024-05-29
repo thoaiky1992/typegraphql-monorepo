@@ -1,29 +1,10 @@
 import { Request, Response } from 'express';
-import { AuthChecker, buildSchema, buildTypeDefsAndResolversSync } from 'type-graphql';
+import { AuthChecker, buildTypeDefsAndResolversSync } from 'type-graphql';
 import Container from 'typedi';
 import { ProductResolver } from '@apolo-services/product/resolvers/product.resolver';
 import { buildFederatedSchema } from '@shared/helpers';
 import { Product, User } from '@apolo-services/product/resolvers/product.type';
 import { contextBuilderType } from '@shared/types';
-
-export const formaterApoloServer = (formattedError: any, error: any) => {
-  switch (formattedError.extensions!.code) {
-    case 'BAD_USER_INPUT':
-      const validationErrors: any = [];
-      const validationErrorsTemp = (formattedError.extensions as any).validationErrors;
-      validationErrorsTemp?.forEach((err: any) => {
-        const { constraints, value, property } = err;
-        validationErrors.push({ constraints, value, property });
-      });
-      return {
-        message: formattedError.message,
-        extensions: { code: formattedError.extensions!.code, validationErrors }
-      };
-
-    default:
-      return { message: formattedError.message };
-  }
-};
 
 type ContextType = {
   req: Request;

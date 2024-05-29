@@ -1,5 +1,6 @@
 import { buildSubgraphSchema } from '@apollo/subgraph';
 import { type IResolvers, printSchemaWithDirectives } from '@graphql-tools/utils';
+import { logger } from '@shared/library/logger';
 import gql from 'graphql-tag';
 import { merge } from 'lodash';
 import { type BuildSchemaOptions, buildSchema, createResolversMap } from 'type-graphql';

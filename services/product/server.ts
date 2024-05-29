@@ -7,12 +7,13 @@ import { ApplyMiddleware, ApplyPlugin, EnableApolloServer, EnableExpress } from 
 import { buildFederatedApoloServiceSchema, contextBuilder } from './config';
 import { ApolloServerPluginInlineTraceDisabled } from '@apollo/server/plugin/disabled';
 import { APOLO_SERVICE_PRODUCT_PORT } from './constants';
+import { MyPlugin } from '@shared/helpers/myPlugin';
 
 @EnableApolloServer({
   schema: buildFederatedApoloServiceSchema,
   contextBuilder
 })
-@ApplyPlugin(ApolloServerPluginInlineTraceDisabled())
+@ApplyPlugin(ApolloServerPluginInlineTraceDisabled(), MyPlugin())
 @ApplyMiddleware(cors(), bodyParser.json())
 @EnableExpress()
 class App extends IApp {

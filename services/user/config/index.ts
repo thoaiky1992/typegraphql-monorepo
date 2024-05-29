@@ -9,25 +9,6 @@ import { User, Profile } from '@apolo-services/user/resolvers/user.type';
 import { resolveUserReference } from '@apolo-services/user/resolvers/user.reference';
 import { contextBuilderType } from '@shared/types';
 
-export const formaterApoloServer = (formattedError: any, error: any) => {
-  switch (formattedError.extensions!.code) {
-    case 'BAD_USER_INPUT':
-      const validationErrors: any = [];
-      const validationErrorsTemp = (formattedError.extensions as any).validationErrors;
-      validationErrorsTemp?.forEach((err: any) => {
-        const { constraints, value, property } = err;
-        validationErrors.push({ constraints, value, property });
-      });
-      return {
-        message: formattedError.message,
-        extensions: { code: formattedError.extensions!.code, validationErrors }
-      };
-
-    default:
-      return { message: formattedError.message };
-  }
-};
-
 type ContextType = {
   req: Request;
   res: Response;
@@ -47,7 +28,6 @@ export const ApoloGatewayBuildService = ({ name, url }: any) => {
     useChunkedTransfer: true,
     willSendRequest({ request, context }: GraphQLDataSourceProcessOptions<any>) {
       if (request && request.http) {
-        console.log(context.req.body.variables.files);
         request.http!.headers.set('authorization', context.req.headers.authorization || '');
       }
     }

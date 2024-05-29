@@ -7,6 +7,7 @@ import express, { RequestHandler } from 'express';
 import { expressMiddleware } from '@apollo/server/express4';
 import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.js';
 import { GRAPHQL_PATH } from '@shared/constants';
+import { logger } from '@shared/library/logger';
 
 type EnableApolloServer = {
   schema: any;
@@ -24,7 +25,7 @@ export function EnableApolloServer({ schema, contextBuilder }: EnableApolloServe
           schema: buildFederatedApoloServiceSchema,
           formatError: formaterApoloServer
         };
-        this._server = new ApolloServer(options);
+        this._server = new ApolloServer({ ...options, logger });
         this._plugins.forEach((plugin) => this._server.addPlugin(plugin));
         await this._server.start();
         this._middlewares.forEach((fn) => this._app.use(this._path, fn));
@@ -32,7 +33,7 @@ export function EnableApolloServer({ schema, contextBuilder }: EnableApolloServe
         this._app.use(this._path, expressMiddleware(this._server, { context: contextBuilder }));
         this._app.use(this._path, express.json());
         await new Promise<void>((resolve) => this._app.listen(this._port, resolve));
-        console.log(`GraphQL server ready at http://localhost:${this._port}${this._path}`);
+        logger.info(`GraphQL server ready at http://localhost:${this._port}${this._path}`);
       }
     };
   };

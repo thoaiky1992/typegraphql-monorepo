@@ -3,3 +3,4 @@ node_modules
 graphql
 public
 prisma/generated
+logs
