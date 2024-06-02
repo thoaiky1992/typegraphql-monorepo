@@ -4,6 +4,7 @@
     "lib": ["ESNext"],
     "target": "ES2022", // Target output cho code
     "outDir": "dist", // Đường dẫn output cho thư mục build
+    "resolveJsonModule": true,
     "moduleResolution": "Node",
     "noUnusedLocals": false,
     "noUnusedParameters": false,
@@ -28,5 +29,6 @@
     "require": ["tsconfig-paths/register"]
   },
   "files": ["@shared/types/index.d.ts"], // Các file dùng để defined global type cho dự án
-  "include": ["services/**/*", "@shared/types/index.d.ts", "@shared/**/*", "prisma/**/*", "@shared/document"] // Đường dẫn include cho các file cần build
+  "include": ["services/**/*.ts", "@shared/types/index.d.ts", "@shared/**/*.ts", "prisma/**/*"], // Đường dẫn include cho các file cần build
+  "exclude": ["node_modules/**/*"]
 }

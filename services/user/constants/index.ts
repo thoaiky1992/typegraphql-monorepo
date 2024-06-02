@@ -8,7 +8,9 @@ export const SAMPLE_USER_DATA = [
     password: '123456',
     profile: {
       id: 1,
-      address: 'TP.HCM'
+      address: 'TP.HCM',
+      userId: 1,
+      phone: '000-0000-0000'
     }
   },
   {
@@ -18,7 +20,9 @@ export const SAMPLE_USER_DATA = [
     password: '123456',
     profile: {
       id: 2,
-      address: 'HN'
+      address: 'HN',
+      userId: 2,
+      phone: '111-1111-1111s'
     }
   }
 ];

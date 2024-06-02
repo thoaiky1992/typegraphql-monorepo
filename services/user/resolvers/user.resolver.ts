@@ -7,6 +7,10 @@ import { parse } from 'path';
 import { User } from '@apolo-services/user/resolvers/user.type';
 import { SAMPLE_USER_DATA } from '@apolo-services/user/constants';
 import { UserInput } from './user.input';
+import { Logger } from '@shared/library/logger';
+import { CacheData } from '@shared/library/cache';
+import userJson from '@apolo-services/user/json/users.json';
+import { GetAllUserContitionArg } from './user.args';
 @Service()
 @Resolver(() => User)
 export class UserResolver {
@@ -17,11 +21,12 @@ export class UserResolver {
     return user?.profile;
   }
 
+  // @CacheData(200)
   @Authorized()
   @Query(() => [User])
-  async USER_getAllUser() {
-    /// get database
-    const users: Array<User> = SAMPLE_USER_DATA;
+  async USER_getAllUser(@Args() args: GetAllUserContitionArg) {
+    const { skip = 0, take = 100 } = args
+    const users: Array<User> = [...userJson].splice(skip, take);
     return users;
   }
 

@@ -2,23 +2,31 @@ import 'reflect-metadata';
 import 'dotenv/config';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import { ApplyMiddleware, ApplyPlugin, EnableApolloServer, EnableExpress, EnableRabbitMQ } from '@shared/decorators';
+import {
+  ApplyMiddleware,
+  ApplyPlugin,
+  EnableApolloServer,
+  EnableExpress,
+  EnableIoRedis,
+  EnableRabbitMQ
+} from '@shared/library/server';
 import { buildFederatedApoloServiceSchema, contextBuilder } from './config';
 import { ApolloServerPluginInlineTraceDisabled } from '@apollo/server/plugin/disabled';
 import { APOLO_SERVICE_PRODUCT_PORT } from './constants';
 import { MyPlugin } from '@shared/helpers/myPlugin';
 import { IApp } from '@shared/interface';
 import { Registry } from '@shared/library/container';
-import { EnableSAGA, SagaManager } from '@shared/library/saga/saga';
+import { EnableSAGA, SagaManager } from '@shared/library/saga';
 
 // @EnableRabbitMQ()
+@EnableIoRedis()
 @EnableSAGA()
 @EnableApolloServer({
   schema: buildFederatedApoloServiceSchema,
   contextBuilder
 })
 @ApplyPlugin(ApolloServerPluginInlineTraceDisabled(), MyPlugin())
-@ApplyMiddleware(cors(), bodyParser.json())
+@ApplyMiddleware(cors())
 @EnableExpress()
 @Registry([{ token: SagaManager, useClass: SagaManager }])
 class App extends IApp {

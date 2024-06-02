@@ -6,3 +6,9 @@ prisma/generated
 logs
 rabbitmq-data
 codegen
+cache-redis
+postgres
+dbdata
+mysql
+jenkins_home
+dist

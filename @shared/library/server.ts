@@ -9,6 +9,7 @@ import { GRAPHQL_PATH } from '@shared/constants';
 import { Logger, logger } from '@shared/library/logger';
 import { RabbitMQClient } from '@shared/library/rabbitmq-client';
 import { IApp } from '@shared/interface';
+import { IoRedisClient } from './cache';
 
 type EnableApolloServer = {
   schema: any;
@@ -31,8 +32,8 @@ export function EnableApolloServer({ schema, contextBuilder }: EnableApolloServe
         await this._server.start();
         this._middlewares.forEach((fn) => this._app.use(this._path, fn));
         this._app.use(graphqlUploadExpress());
-        this._app.use(this._path, expressMiddleware(this._server, { context: contextBuilder }));
         this._app.use(this._path, express.json());
+        this._app.use(this._path, expressMiddleware(this._server, { context: contextBuilder }));
         await new Promise<void>((resolve) => this._app.listen(this._port, resolve));
         logger.info(`GraphQL server ready at http://localhost:${this._port}${this._path}`);
       }
@@ -88,6 +89,20 @@ export function EnableRabbitMQ() {
   };
 }
 
+export function EnableIoRedis() {
+  return function <T extends new (...args: any[]) => IApp>(target: T) {
+    return class extends target {
+      constructor(...args: any[]) {
+        super(...args);
+      }
+      async start(): Promise<void> {
+        super.start();
+        await IoRedisClient.connect();
+      }
+    };
+  };
+}
+
 export function EnableApolloGatway(options: ApolloServerOptions<BaseContext>, contextBuilder: any) {
   return function <T extends new (...args: any[]) => IApp>(target: T) {
     return class extends target {
@@ -100,8 +115,8 @@ export function EnableApolloGatway(options: ApolloServerOptions<BaseContext>, co
         await this._server.start();
         this._middlewares.forEach((fn) => this._app.use(this._path, fn));
         this._app.use(graphqlUploadExpress());
-        this._app.use(this._path, expressMiddleware(this._server, { context: contextBuilder }));
         this._app.use(this._path, express.json());
+        this._app.use(this._path, expressMiddleware(this._server, { context: contextBuilder }));
         await new Promise<void>((resolve) => this._app.listen(this._port, resolve));
         Logger.info(`GraphQL server ready at http://localhost:${this._port}${this._path}`);
       }

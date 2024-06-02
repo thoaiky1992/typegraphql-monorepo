@@ -17,6 +17,11 @@ declare global {
       SAGA_REDIS_PASS: string;
       SAGA_REDIS_HOST: string;
       SAGA_REDIS_PORT: number;
+
+      IO_REDIS_HOST: string;
+      IO_REDIS_PORT: nunber;
+      IO_REDIS_PASS: string;
+      IO_REDIS_DB: number;
     }
   }
 }

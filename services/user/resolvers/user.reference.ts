@@ -1,9 +1,5 @@
-import { type User } from '@apolo-services/user/resolvers/user.type';
+import { SAMPLE_USER_DATA } from '../constants';
 
-export function resolveUserReference(reference: any, context: any): User {
-  return {
-    id: 1,
-    userName: 'Ky',
-    email: 'thoaiky1992@gmail.com'
-  };
+export function resolveUserReference(reference: any, context: any) {
+  return SAMPLE_USER_DATA.find((u) => u.id === Number(reference?.id));
 }
