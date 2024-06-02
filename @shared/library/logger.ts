@@ -8,10 +8,24 @@ const FORMAT_DATETIME = 'DD-MM-YYYY HH:mm:ss';
 // Define a custom log format with syntax highlighting for the console
 const consoleFormat = winston.format.printf((info) => {
   const { level, timestamp, errors, message } = info;
-  const color = level === 'error' ? '#ee0002' : '#e1a20f';
-  const datetime = moment(new Date()).format(FORMAT_DATETIME);
-  const formattedTimestamp = chalk.hex(color).bold(`[${datetime}]`);
-  const formattedLevel = chalk.hex(color).bold(level.toLocaleUpperCase());
+  let color: string;
+  switch (level) {
+    case 'error':
+      color = '#ee0002';
+      break;
+    case 'info':
+      color = '#0BB976';
+      break;
+    case 'warn':
+      color = '#e1a20f';
+      break;
+    default:
+      color = '#ffffff';
+      break;
+  }
+  const datetime = moment(timestamp).format(FORMAT_DATETIME);
+  const formattedTimestamp = chalk.hex(color)(`[${datetime}]`);
+  const formattedLevel = chalk.hex(color)(level === 'warn' ? 'LOG' : level.toLocaleUpperCase());
   let logMessage = `${formattedTimestamp} [${formattedLevel}]: `;
   if (level === 'error' && errors) {
     (errors ?? []).forEach((err: any, index: number) => {
@@ -21,7 +35,7 @@ const consoleFormat = winston.format.printf((info) => {
       logMessage += chalk.hex(color)(m);
     });
   } else {
-    logMessage += chalk.hex(color).bold(message);
+    logMessage += chalk.hex(color)(message);
   }
   return logMessage;
 });
@@ -35,7 +49,7 @@ const logFileFormat = winston.format.printf(({ errors, context, message }) => {
   if (context && errors) {
     const { req, user } = context || {};
     const { body, headers } = req || {};
-    let { query, variables } = body || {};
+    const { query, variables } = body || {};
     formatLog += `\n[userId]: ${user?.id ?? ''}`;
     formatLog += `\n[ip]: ${req?.ip ?? ''}`;
     formatLog += `\n[user-agent]: ${headers?.['user-agent'] ?? ''}`;
@@ -78,3 +92,15 @@ export const logger = winston.createLogger({
   ),
   transports: [new winston.transports.Console(), TransportFile]
 });
+
+export class Logger {
+  static error(message: string | unknown, ...args: any) {
+    return logger.error(message as any, args);
+  }
+  static log(message: string, ...args: any) {
+    return logger.warn(message, args);
+  }
+  static info(message: string, ...args: any) {
+    return logger.info(message, args);
+  }
+}

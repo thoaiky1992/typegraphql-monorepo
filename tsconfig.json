@@ -21,13 +21,12 @@
     "paths": {
       "@apolo-services/*": ["services/*"],
       "@shared/*": ["@shared/*"],
-      "@prisma/*": ["prisma/*"],
-      "@document/*": ["document/*"]
+      "@prisma/*": ["prisma/*"]
     }
   },
   "ts-node": {
     "require": ["tsconfig-paths/register"]
   },
-  "files": ["@shared/services/index.d.ts"], // Các file dùng để defined global type cho dự án
-  "include": ["services/**/*", "@shared/services/index.d.ts", "@shared/**/*", "prisma/**/*", "document"] // Đường dẫn include cho các file cần build
+  "files": ["@shared/types/index.d.ts"], // Các file dùng để defined global type cho dự án
+  "include": ["services/**/*", "@shared/types/index.d.ts", "@shared/**/*", "prisma/**/*", "@shared/document"] // Đường dẫn include cho các file cần build
 }

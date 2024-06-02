@@ -4,3 +4,5 @@ graphql
 public
 prisma/generated
 logs
+rabbitmq-data
+codegen

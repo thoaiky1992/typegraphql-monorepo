@@ -5,8 +5,8 @@ import Upload from 'graphql-upload/Upload.js';
 import { createWriteStream } from 'fs';
 import { parse } from 'path';
 import { User } from '@apolo-services/user/resolvers/user.type';
-import { UserInput } from '@apolo-services/user/resolvers/user.input';
 import { SAMPLE_USER_DATA } from '@apolo-services/user/constants';
+import { UserInput } from './user.input';
 @Service()
 @Resolver(() => User)
 export class UserResolver {
@@ -34,7 +34,6 @@ export class UserResolver {
 
   @Mutation(() => User)
   async createUser(@Arg('payload') payload: UserInput) {
-    console.log(payload);
     return payload;
   }
 

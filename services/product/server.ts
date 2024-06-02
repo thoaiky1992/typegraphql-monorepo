@@ -2,13 +2,17 @@ import 'reflect-metadata';
 import 'dotenv/config';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import { IApp } from '@shared/services';
-import { ApplyMiddleware, ApplyPlugin, EnableApolloServer, EnableExpress } from '@shared/decorators';
+import { ApplyMiddleware, ApplyPlugin, EnableApolloServer, EnableExpress, EnableRabbitMQ } from '@shared/decorators';
 import { buildFederatedApoloServiceSchema, contextBuilder } from './config';
 import { ApolloServerPluginInlineTraceDisabled } from '@apollo/server/plugin/disabled';
 import { APOLO_SERVICE_PRODUCT_PORT } from './constants';
 import { MyPlugin } from '@shared/helpers/myPlugin';
+import { IApp } from '@shared/interface';
+import { Registry } from '@shared/library/container';
+import { EnableSAGA, SagaManager } from '@shared/library/saga/saga';
 
+// @EnableRabbitMQ()
+@EnableSAGA()
 @EnableApolloServer({
   schema: buildFederatedApoloServiceSchema,
   contextBuilder
@@ -16,6 +20,7 @@ import { MyPlugin } from '@shared/helpers/myPlugin';
 @ApplyPlugin(ApolloServerPluginInlineTraceDisabled(), MyPlugin())
 @ApplyMiddleware(cors(), bodyParser.json())
 @EnableExpress()
+@Registry([{ token: SagaManager, useClass: SagaManager }])
 class App extends IApp {
   constructor(port: number) {
     super();

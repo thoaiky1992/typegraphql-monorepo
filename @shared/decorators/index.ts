@@ -2,12 +2,13 @@ import { ApolloServer, ApolloServerPlugin } from '@apollo/server';
 import { ApolloServerOptions } from '@apollo/server';
 import { BaseContext } from '@apollo/server';
 import { formaterApoloServer } from '@shared/helpers';
-import { IApp } from '@shared/services';
 import express, { RequestHandler } from 'express';
 import { expressMiddleware } from '@apollo/server/express4';
 import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.js';
 import { GRAPHQL_PATH } from '@shared/constants';
-import { logger } from '@shared/library/logger';
+import { Logger, logger } from '@shared/library/logger';
+import { RabbitMQClient } from '@shared/library/rabbitmq-client';
+import { IApp } from '@shared/interface';
 
 type EnableApolloServer = {
   schema: any;
@@ -73,6 +74,20 @@ export function EnableExpress() {
   };
 }
 
+export function EnableRabbitMQ() {
+  return function <T extends new (...args: any[]) => IApp>(target: T) {
+    return class extends target {
+      constructor(...args: any[]) {
+        super(...args);
+      }
+      async start(): Promise<void> {
+        super.start();
+        await RabbitMQClient.connect();
+      }
+    };
+  };
+}
+
 export function EnableApolloGatway(options: ApolloServerOptions<BaseContext>, contextBuilder: any) {
   return function <T extends new (...args: any[]) => IApp>(target: T) {
     return class extends target {
@@ -88,7 +103,7 @@ export function EnableApolloGatway(options: ApolloServerOptions<BaseContext>, co
         this._app.use(this._path, expressMiddleware(this._server, { context: contextBuilder }));
         this._app.use(this._path, express.json());
         await new Promise<void>((resolve) => this._app.listen(this._port, resolve));
-        console.log(`GraphQL server ready at http://localhost:${this._port}${this._path}`);
+        Logger.info(`GraphQL server ready at http://localhost:${this._port}${this._path}`);
       }
     };
   };

@@ -1,0 +1,114 @@
+version: '3.8'
+services:
+  #Redis
+  # redis:
+  #   image: redis:6.2-alpine
+  #   container_name: redis
+  #   restart: always
+  #   tty: true
+  #   ports:
+  #     - '6379:6379'
+  #   command: redis-server --save 60 1 --loglevel warning --requirepass '${REDIS_PASSWORD}'
+  #   volumes:
+  #     - ./cache-redis:/data
+  #   networks:
+  #     - app-network
+  #   env_file:
+  #     - .env
+
+  #Postgres
+  # postgres:
+  #   container_name: 'postgres'
+  #   image: 'postgres'
+  #   restart: unless-stopped
+  #   environment:
+  #     POSTGRES_DB: '${DB_NAME}'
+  #     POSTGRES_USER: '${DB_USER}'
+  #     POSTGRES_PASSWORD: '${DB_PASS}'
+  #   volumes:
+  #     - postgres:/data/postgres
+  #   env_file:
+  #     - .env
+  #   networks:
+  #     - app-network
+  #   ports:
+  #     - '${DB_PORT}:${DB_PORT}'
+
+  #RabbitMQ-UI
+  rabbitmq-ui:
+    image: rabbitmq:3.8-management
+    container_name: rabbitmq-ui
+    restart: unless-stopped
+    volumes:
+      - ./rabbitmq-data:/var/lib/rabbitmq
+    ports:
+      - '5672:5672' # RabbitMQ UI port (HTTPS)
+      - '15672:15672' # RabbitMQ UI port (HTTP)
+    environment:
+      RABBITMQ_DEFAULT_USER: '${RABBITMQ_USER}'
+      RABBITMQ_DEFAULT_PASS: '${RABBITMQ_PASS}'
+    env_file:
+      - .env
+    networks:
+      - app-network
+
+  #Mysql
+  # db:
+  #   image: mysql:8
+  #   platform: linux/amd64
+  #   container_name: db
+  #   restart: unless-stopped
+  #   tty: true
+  #   ports:
+  #     - '${DB_PORT}:${DB_PORT}'
+  #   environment:
+  #     MYSQL_DATABASE: '${DB_DATABASE}'
+  #     MYSQL_USER: '${DB_USERNAME}'
+  #     MYSQL_PASSWORD: '${DB_PASSWORD}'
+  #     MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+  #     SERVICE_TAGS: dev
+  #     SERVICE_NAME: mysql
+  #     TZ: '${DB_TIMEZONE}'
+  #   volumes:
+  #     - ./dbdata:/var/lib/mysql
+  #     - ./mysql/my.cnf:/etc/mysql/my.cnf
+  #   networks:
+  #     - app-network
+  #   env_file:
+  #     - .env
+
+  # #Adminer
+  # adminer:
+  #   image: adminer
+  #   container_name: adminer
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - db
+  #   ports:
+  #     - 9080:8080
+  #   networks:
+  #     - app-network
+
+  #Jenkins
+  # jenkins:
+  #   image: jenkins/jenkins:lts
+  #   container_name: jenkins
+  #   ports:
+  #     - '8080:8080'
+  #   networks:
+  #     - app-network
+  #   volumes:
+  #     - ./jenkins_home:/var/jenkins_home
+  #   environment:
+  #     TZ: Asia/Ho_Chi_Minh
+
+#Networks
+networks:
+  app-network:
+    name: app-network
+    external: true
+#Volumes
+#volumes:
+#  dbdata:
+#    name: dbdata
+#    driver: local
