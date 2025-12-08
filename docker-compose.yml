@@ -1,38 +1,37 @@
-version: '3.8'
 services:
   #Redis
-  # redis:
-  #   image: redis:6.2-alpine
-  #   container_name: redis
-  #   restart: always
-  #   tty: true
-  #   ports:
-  #     - '6379:6379'
-  #   command: redis-server --save 60 1 --loglevel warning --requirepass '${REDIS_PASSWORD}'
-  #   volumes:
-  #     - ./cache-redis:/data
-  #   networks:
-  #     - app-network
-  #   env_file:
-  #     - .env
+  redis:
+    image: redis:6.2-alpine
+    container_name: redis
+    restart: always
+    tty: true
+    ports:
+      - '6379:6379'
+    command: redis-server --save 60 1 --loglevel warning --requirepass '${REDIS_PASSWORD}'
+    volumes:
+      - ./cache-redis:/data
+    networks:
+      - app-network
+    env_file:
+      - .env
 
   #Postgres
-  # postgres:
-  #   container_name: 'postgres'
-  #   image: 'postgres'
-  #   restart: unless-stopped
-  #   environment:
-  #     POSTGRES_DB: '${DB_NAME}'
-  #     POSTGRES_USER: '${DB_USER}'
-  #     POSTGRES_PASSWORD: '${DB_PASS}'
-  #   volumes:
-  #     - ./postgres:/data/postgres
-  #   env_file:
-  #     - .env
-  #   networks:
-  #     - app-network
-  #   ports:
-  #     - '${DB_PORT}:${DB_PORT}'
+  postgres:
+    container_name: 'postgres'
+    image: 'postgres'
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: '${POSTGRES_DB}'
+      POSTGRES_USER: '${POSTGRES_USER}'
+      POSTGRES_PASSWORD: '${POSTGRES_PASSWORD}'
+    volumes:
+      - ./postgres:/data/postgres
+    env_file:
+      - .env
+    networks:
+      - app-network
+    ports:
+      - '${POSTGRES_DB_PORT}:${POSTGRES_DB_PORT}'
 
   #RabbitMQ-UI
   rabbitmq-ui:

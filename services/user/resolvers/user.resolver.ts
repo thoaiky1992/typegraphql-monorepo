@@ -1,7 +1,7 @@
 import { Arg, Args, Authorized, FieldResolver, Mutation, Query, Resolver, Root } from 'type-graphql';
 import { Service } from 'typedi';
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
-import Upload from 'graphql-upload/Upload.js';
+import { FileUpload } from 'graphql-upload/Upload.js';
 import { createWriteStream } from 'fs';
 import { parse } from 'path';
 import { User } from '@apolo-services/user/resolvers/user.type';
@@ -22,10 +22,10 @@ export class UserResolver {
   }
 
   // @CacheData(200)
-  @Authorized()
+  // @Authorized()
   @Query(() => [User])
   async USER_getAllUser(@Args() args: GetAllUserContitionArg) {
-    const { skip = 0, take = 100 } = args
+    const { skip = 0, take = 100 } = args;
     const users: Array<User> = [...userJson].splice(skip, take);
     return users;
   }
@@ -42,12 +42,22 @@ export class UserResolver {
     return payload;
   }
 
-  @Authorized()
+  // @Authorized()
   @Mutation(() => [String])
-  async uploadFile(@Arg('files', () => [GraphQLUpload]) files: [Upload]): Promise<string[]> {
+  async uploadFile(@Arg('files', () => [GraphQLUpload]) files: [FileUpload]): Promise<string[]> {
     const urls = [];
     for (const file of files) {
-      const { createReadStream, filename } = (await file) as any;
+      const { filename, mimetype, createReadStream } = await file;
+      console.log({ filename, mimetype });
+
+      // // Convert stream to buffer
+      // const stream = createReadStream();
+      // const chunks: Uint8Array[] = [];
+      // for await (const chunk of stream) {
+      //   chunks.push(chunk);
+      // }
+      // const buffer = Buffer.concat(chunks);
+      // console.log(buffer);
       const { name, ext } = parse(filename);
       const newFileName = name + '_' + new Date().getTime() + ext;
 

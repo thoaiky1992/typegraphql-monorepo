@@ -31,7 +31,8 @@ export function EnableApolloServer({ schema, contextBuilder }: EnableApolloServe
         this._plugins.forEach((plugin) => this._server.addPlugin(plugin));
         await this._server.start();
         this._middlewares.forEach((fn) => this._app.use(this._path, fn));
-        this._app.use(graphqlUploadExpress());
+        this._app.use('/public', express.static('public')); // Serve static files
+        this._app.use(this._path, graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
         this._app.use(this._path, express.json());
         this._app.use(this._path, expressMiddleware(this._server, { context: contextBuilder }));
         await new Promise<void>((resolve) => this._app.listen(this._port, resolve));
@@ -103,7 +104,7 @@ export function EnableIoRedis() {
   };
 }
 
-export function EnableApolloGatway(options: ApolloServerOptions<BaseContext>, contextBuilder: any) {
+export function EnableApolloGateway(options: ApolloServerOptions<BaseContext>, contextBuilder: any) {
   return function <T extends new (...args: any[]) => IApp>(target: T) {
     return class extends target {
       constructor(...args: any[]) {
@@ -114,7 +115,7 @@ export function EnableApolloGatway(options: ApolloServerOptions<BaseContext>, co
         this._plugins.forEach((plugin) => this._server.addPlugin(plugin));
         await this._server.start();
         this._middlewares.forEach((fn) => this._app.use(this._path, fn));
-        this._app.use(graphqlUploadExpress());
+        this._app.use(this._path, graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
         this._app.use(this._path, express.json());
         this._app.use(this._path, expressMiddleware(this._server, { context: contextBuilder }));
         await new Promise<void>((resolve) => this._app.listen(this._port, resolve));

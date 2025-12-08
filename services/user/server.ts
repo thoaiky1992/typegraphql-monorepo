@@ -18,7 +18,7 @@ import { Registry } from '@shared/library/container';
 import { EnableSAGA, SagaManager } from '@shared/library/saga';
 
 // @EnableRabbitMQ()
-// @EnableIoRedis()
+@EnableIoRedis()
 @EnableSAGA()
 @EnableApolloServer({
   schema: buildFederatedApoloServiceSchema,
