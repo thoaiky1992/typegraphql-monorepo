@@ -1,0 +1,32 @@
+{
+  "folders": [
+    {
+      "name": "Root",
+      "path": "."
+    },
+    {
+      "name": "@repo/shared",
+      "path": "./packages/shared"
+    },
+    {
+      "name": "@repo/service-user",
+      "path": "./packages/service-user"
+    },
+    {
+      "name": "@repo/service-product",
+      "path": "./packages/service-product"
+    },
+    {
+      "name": "@repo/service-gateway",
+      "path": "./packages/service-gateway"
+    },
+    {
+      "name": "@repo/prisma",
+      "path": "./packages/prisma"
+    }
+  ],
+  "settings": {
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "typescript.enablePromptUseWorkspaceTsdk": true
+  }
+}

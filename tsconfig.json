@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "module": "CommonJS", // Quy định output module được sử dụng
+    "module": "CommonJS",
     "lib": ["ESNext"],
-    "target": "ES2022", // Target output cho code
-    "outDir": "dist", // Đường dẫn output cho thư mục build
+    "target": "ES2022",
+    "outDir": "dist",
     "resolveJsonModule": true,
     "moduleResolution": "Node",
     "noUnusedLocals": false,
@@ -16,19 +16,24 @@
     "allowSyntheticDefaultImports": true,
     "useDefineForClassFields": false,
     "declaration": true,
-    "strict": true /* Enable all strict type-checking options. */,
-    "skipLibCheck": true /* Skip type checking all .d.ts files. */,
-    "baseUrl": ".", // Đường dẫn base cho các import
+    "strict": true,
+    "skipLibCheck": true,
+    "baseUrl": ".",
     "paths": {
-      "@apolo-services/*": ["services/*"],
-      "@shared/*": ["@shared/*"],
-      "@prisma/*": ["prisma/*"]
+      "@repo/shared": ["./packages/shared"],
+      "@repo/shared/*": ["./packages/shared/*"],
+      "@repo/service-user": ["./packages/service-user"],
+      "@repo/service-user/*": ["./packages/service-user/*"],
+      "@repo/service-product": ["./packages/service-product"],
+      "@repo/service-product/*": ["./packages/service-product/*"],
+      "@repo/service-gateway": ["./packages/service-gateway"],
+      "@repo/service-gateway/*": ["./packages/service-gateway/*"],
+      "@repo/prisma": ["./packages/prisma"],
+      "@repo/prisma/*": ["./packages/prisma/*"]
     }
   },
   "ts-node": {
     "require": ["tsconfig-paths/register"]
   },
-  "files": ["@shared/types/index.d.ts"], // Các file dùng để defined global type cho dự án
-  "include": ["services/**/*.ts", "@shared/types/index.d.ts", "@shared/**/*.ts", "prisma/**/*"], // Đường dẫn include cho các file cần build
-  "exclude": ["node_modules/**/*"]
+  "exclude": ["node_modules", "dist", "**/node_modules", "**/dist"]
 }

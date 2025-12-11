@@ -1,3 +1,8 @@
-node_modules/
-dist/
-prisma/
+packages/*/dist
+packages/*/node_modules
+packages/prisma/generated
+node_modules
+dist
+*.d.ts
+graphql
+codegen

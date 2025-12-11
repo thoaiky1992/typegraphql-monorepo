@@ -1,0 +1,22 @@
+{
+  "name": "@repo/service-user",
+  "version": "1.0.0",
+  "private": true,
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "nodemon --exec ts-node server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js"
+  },
+  "exports": {
+    "./*": {
+      "import": "./dist/*.js",
+      "require": "./dist/*.js",
+      "types": "./dist/*.d.ts"
+    }
+  },
+  "dependencies": {
+    "@repo/shared": "*",
+    "@repo/prisma": "*"
+  }
+}
