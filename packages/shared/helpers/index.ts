@@ -43,10 +43,10 @@ export const formaterApoloServer = (formattedError: any, error: any) => {
       });
       return {
         message: formattedError.message,
-        extensions: { code: formattedError.extensions!.code, validationErrors }
+        extensions: { code: formattedError?.extensions?.code, validationErrors }
       };
 
     default:
-      return { message: formattedError.message };
+      return { message: formattedError.message, extensions: formattedError.extensions };
   }
 };
